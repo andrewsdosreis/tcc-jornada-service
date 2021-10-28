@@ -1,4 +1,6 @@
-package br.com.lutadeclasses.jornadaservice.model;
+package br.com.lutadeclasses.jornadaservice.model.request;
+
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -11,8 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class RequestNovaAlternativaDto {
-
+public class NovaCartaDto {
     private String descricao;
-    
+    private String ator;
+    private List<NovaAlternativaDto> alternativas;
 }

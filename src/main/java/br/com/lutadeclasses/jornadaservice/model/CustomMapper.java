@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 import br.com.lutadeclasses.jornadaservice.entity.Carta;
 import br.com.lutadeclasses.jornadaservice.entity.Jornada;
 import br.com.lutadeclasses.jornadaservice.entity.JornadaCarta;
+import br.com.lutadeclasses.jornadaservice.model.response.AlternativaDto;
+import br.com.lutadeclasses.jornadaservice.model.response.CartaDto;
+import br.com.lutadeclasses.jornadaservice.model.response.JornadaCartaDto;
+import br.com.lutadeclasses.jornadaservice.model.response.JornadaDto;
 
 @Component
 public class CustomMapper {
@@ -20,36 +24,36 @@ public class CustomMapper {
         this.mapper = mapper;
     }
     
-    public ResponseCartaDto converterCartaComAlternativa(Carta carta) {
-        List<ResponseAlternativaDto> alternativas = carta.getAlternativas()
-                                                         .stream()
-                                                         .map(alternativa -> mapper.convertValue(alternativa, ResponseAlternativaDto.class))
-                                                         .collect(Collectors.toList());
+    public CartaDto converterCartaComAlternativa(Carta carta) {
+        List<AlternativaDto> alternativas = carta.getAlternativas()
+                                                 .stream()
+                                                 .map(alternativa -> mapper.convertValue(alternativa, AlternativaDto.class))
+                                                 .collect(Collectors.toList());
 
-        return ResponseCartaDto.builder()
-                               .id(carta.getId())
-                               .descricao(carta.getDescricao())
-                               .alternativas(alternativas)
-                               .build();
+        return CartaDto.builder()
+                       .id(carta.getId())
+                       .descricao(carta.getDescricao())
+                       .alternativas(alternativas)
+                       .build();
     }
 
-    public ResponseJornadaDto converterJornadaComCartas(Jornada jornada) {
-        List<ResponseJornadaCartaDto> jornadaCartas = jornada.getJornadaCartas()
-                                                             .stream()
-                                                             .map(this::converterJornadaCarta)
-                                                             .collect(Collectors.toList());
-        return ResponseJornadaDto.builder()
+    public JornadaDto converterJornadaComCartas(Jornada jornada) {
+        List<JornadaCartaDto> jornadaCartas = jornada.getJornadasCartas()
+                                                     .stream()
+                                                     .map(this::converterJornadaCarta)
+                                                     .collect(Collectors.toList());
+        return JornadaDto.builder()
                                  .id(jornada.getId())
                                  .titulo(jornada.getTitulo())
                                  .cartas(jornadaCartas)
                                  .build();
     }
 
-    private ResponseJornadaCartaDto converterJornadaCarta(JornadaCarta jornadaCarta) {
-        return ResponseJornadaCartaDto.builder()
-                                      .pontoInicial(jornadaCarta.getPontoInicial())
-                                      .carta(converterCartaComAlternativa(jornadaCarta.getCarta()))
-                                      .build();
+    private JornadaCartaDto converterJornadaCarta(JornadaCarta jornadaCarta) {
+        return JornadaCartaDto.builder()
+                              .posicao(jornadaCarta.getPosicao())
+                              .carta(converterCartaComAlternativa(jornadaCarta.getCarta()))
+                              .build();
     }
     
 }

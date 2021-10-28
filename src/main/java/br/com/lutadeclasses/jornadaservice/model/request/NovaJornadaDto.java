@@ -1,7 +1,6 @@
-package br.com.lutadeclasses.jornadaservice.model;
+package br.com.lutadeclasses.jornadaservice.model.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @EqualsAndHashCode
-public class RequestNovaJornadaCartaDto {
-    
-    private Integer cartaId;
-    private Boolean pontoInicial;
-
+public class NovaJornadaDto {
+    private String titulo;
 }
