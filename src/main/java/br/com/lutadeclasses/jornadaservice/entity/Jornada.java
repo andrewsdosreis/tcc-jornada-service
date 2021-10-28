@@ -29,7 +29,7 @@ public class Jornada {
 
     @OneToMany(mappedBy = "jornada")
     @JsonManagedReference
-    private List<JornadaCarta> jornadaCartas;
+    private List<JornadaCarta> jornadasCartas;
 
     public Jornada() {
     }
@@ -54,12 +54,12 @@ public class Jornada {
         this.titulo = titulo;
     }
 
-    public List<JornadaCarta> getJornadaCartas() {
-        return jornadaCartas;
+    public List<JornadaCarta> getJornadasCartas() {
+        return jornadasCartas;
     }
 
-    public void setJornadaCartas(List<JornadaCarta> jornadaCartas) {
-        this.jornadaCartas = jornadaCartas;
+    public void setJornadasCartas(List<JornadaCarta> jornadasCartas) {
+        this.jornadasCartas = jornadasCartas;
     }
 
     @Override

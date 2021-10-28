@@ -1,5 +1,6 @@
 package br.com.lutadeclasses.jornadaservice.entity;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import javax.persistence.Column;
@@ -8,9 +9,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -30,7 +33,11 @@ public class Alternativa {
     @ManyToOne
     @JoinColumn(name = "carta_id", nullable = false)
     @JsonBackReference
-    private Carta carta;    
+    private Carta carta;
+
+    @OneToMany(mappedBy = "alternativa")
+    @JsonManagedReference
+    private List<Acao> acoes;
 
     public Alternativa() {
     }
@@ -61,6 +68,14 @@ public class Alternativa {
 
     public void setCarta(Carta carta) {
         this.carta = carta;
+    }
+
+    public List<Acao> getAcoes() {
+        return acoes;
+    }
+
+    public void setAcoes(List<Acao> acaoList) {
+        this.acoes = acaoList;
     }
 
     @Override

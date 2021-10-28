@@ -1,25 +1,20 @@
 package br.com.lutadeclasses.jornadaservice.entity;
 
-import java.util.List;
 import java.util.function.Consumer;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Entity
-@Table(name = "carta", schema = "luta-de-classe-db")
-public class Carta {
-
+@Table(name = "barra", schema = "luta-de-classe-db")
+public class Barra {
+    
     @Id
     @GeneratedValue
     @Column(name = "id", updatable = false)
@@ -28,22 +23,15 @@ public class Carta {
     @Column(name = "descricao", nullable = false)
     private String descricao;
 
-    @Column(name = "ator", nullable = false)
-    private String ator;
-
-    @OneToMany(mappedBy = "carta", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Alternativa> alternativas;
-
-    public Carta() {
+    public Barra() {
     }
-
-    public Carta(Consumer<Carta> carta) {
-        carta.accept(this);
+    
+    public Barra(Consumer<Barra> barra) {
+        barra.accept(this);
     }
 
     public Integer getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(Integer id) {
@@ -51,27 +39,11 @@ public class Carta {
     }
 
     public String getDescricao() {
-        return this.descricao;
+        return descricao;
     }
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public String getAtor() {
-        return ator;
-    }
-
-    public void setAtor(String ator) {
-        this.ator = ator;
-    }
-
-    public List<Alternativa> getAlternativas() {
-        return alternativas;
-    }
-
-    public void setAlternativas(List<Alternativa> alternativas) {
-        this.alternativas = alternativas;
     }
 
     @Override

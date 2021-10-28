@@ -1,5 +1,6 @@
 package br.com.lutadeclasses.jornadaservice.entity;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import javax.persistence.Column;
@@ -8,9 +9,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -24,9 +27,6 @@ public class JornadaCarta {
     @Column(name = "id", updatable = false)
     private Integer id;
 
-    @Column(name = "ponto_inicial", nullable = false)
-    private Boolean pontoInicial;
-
     @ManyToOne
     @JoinColumn(name = "jornada_id", nullable = false)
     @JsonBackReference
@@ -36,6 +36,13 @@ public class JornadaCarta {
     @JoinColumn(name = "carta_id", nullable = false)
     @JsonBackReference
     private Carta carta;
+
+    @Column(name = "posicao", nullable = false)
+    private String posicao;
+
+    @OneToMany(mappedBy = "jornadaCarta")
+    @JsonManagedReference
+    private List<JornadaAlternativa> jornadasAlternativas;
 
     public JornadaCarta() {
     }
@@ -52,14 +59,6 @@ public class JornadaCarta {
         this.id = id;
     }
 
-    public Boolean getPontoInicial() {
-        return pontoInicial;
-    }
-
-    public void setPontoInicial(Boolean pontoInicial) {
-        this.pontoInicial = pontoInicial;
-    }
-
     public Jornada getJornada() {
         return jornada;
     }
@@ -74,6 +73,22 @@ public class JornadaCarta {
 
     public void setCarta(Carta carta) {
         this.carta = carta;
+    }
+
+    public String getPosicao() {
+        return posicao;
+    }
+
+    public void setPosicao(String posicao) {
+        this.posicao = posicao;
+    }
+
+    public List<JornadaAlternativa> getJornadasAlternativas() {
+        return jornadasAlternativas;
+    }
+
+    public void setJornadasAlternativas(List<JornadaAlternativa> jornadaAlternativaList) {
+        this.jornadasAlternativas = jornadaAlternativaList;
     }
 
     @Override
