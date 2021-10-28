@@ -2,6 +2,8 @@ package br.com.lutadeclasses.jornadaservice.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,49 +13,49 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.lutadeclasses.jornadaservice.model.RequestNovaAlternativaDto;
-import br.com.lutadeclasses.jornadaservice.model.RequestNovaCartaDto;
-import br.com.lutadeclasses.jornadaservice.model.ResponseCartaDto;
+import br.com.lutadeclasses.jornadaservice.model.request.NovaAlternativaDto;
+import br.com.lutadeclasses.jornadaservice.model.request.NovaCartaDto;
+import br.com.lutadeclasses.jornadaservice.model.response.CartaDto;
 import br.com.lutadeclasses.jornadaservice.service.CartaService;
 
 @RestController
 @RequestMapping(path = "/cartas")
 public class CartaController extends BaseController {
     
-    private CartaService service;
+    private CartaService cartaService;
 
     public CartaController(CartaService cartaService) {
-        this.service = cartaService;
+        this.cartaService = cartaService;
     }
 
     @GetMapping()
-    public List<ResponseCartaDto> listarCartas() {
-        return service.listarCartas();
+    public List<CartaDto> listarCartas() {
+        return cartaService.listarCartas();
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<ResponseCartaDto> buscarCarta(@PathVariable Integer id) {
-        return ok(service.buscarCartaPorId(id));
+    public ResponseEntity<CartaDto> buscarCarta(@PathVariable Integer id) {
+        return ok(cartaService.buscarCartaPorId(id));
     }
     
     @PostMapping()
-    public ResponseEntity<ResponseCartaDto> criarCarta(@RequestBody RequestNovaCartaDto novaCarta) {
-        return created(service.criarCarta(novaCarta));
+    public ResponseEntity<CartaDto> criarCarta(@RequestBody @Valid NovaCartaDto novaCarta) {
+        return created(cartaService.criarCarta(novaCarta));
     }
 
     @DeleteMapping(path = "/{id}")
     public void deletarCarta(@PathVariable Integer id) {
-        service.deletarAlternativaNaCarta(id);
+        cartaService.deletarCarta(id);
     }
 
     @PostMapping(path = "/{id}/alternativa")
-    public ResponseEntity<ResponseCartaDto> adicionarAlternativaNaCarta(@PathVariable Integer id, @RequestBody RequestNovaAlternativaDto novaAlternativa) {
-        return created(service.adicionarAlternativaNaCarta(id, novaAlternativa));
+    public ResponseEntity<CartaDto> adicionarAlternativaNaCarta(@PathVariable Integer id, @RequestBody NovaAlternativaDto novaAlternativa) {
+        return created(cartaService.adicionarAlternativaNaCarta(id, novaAlternativa));
     }
     
     @DeleteMapping(path = "/{id}/alternativa")
     public void deletarAlternativaNaCarta(@PathVariable Integer id) {
-        service.deletarAlternativaNaCarta(id);
+        cartaService.deletarAlternativaNaCarta(id);
     }
     
 }

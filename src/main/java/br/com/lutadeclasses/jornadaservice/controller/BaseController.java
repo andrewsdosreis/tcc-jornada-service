@@ -18,10 +18,5 @@ public abstract class BaseController {
         this.logger.info("Registro Criado (201): {}", object);
         return new ResponseEntity<>(object, HttpStatus.CREATED);
     }
-    
-    protected <T> ResponseEntity<T> expectationFailed(T object) {
-        this.logger.error("Expectation failed (417): {}", object);
-        return new ResponseEntity<>(object, HttpStatus.EXPECTATION_FAILED);
-    }
-    
+
 }

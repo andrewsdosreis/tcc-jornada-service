@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.lutadeclasses.jornadaservice.model.RequestNovaJornadaCartaDto;
-import br.com.lutadeclasses.jornadaservice.model.RequestNovaJornadaDto;
-import br.com.lutadeclasses.jornadaservice.model.ResponseJornadaDto;
+import br.com.lutadeclasses.jornadaservice.model.request.NovaJornadaCartaDto;
+import br.com.lutadeclasses.jornadaservice.model.request.NovaJornadaDto;
+import br.com.lutadeclasses.jornadaservice.model.response.JornadaDto;
 import br.com.lutadeclasses.jornadaservice.service.JornadaService;
 
 @RestController
@@ -26,22 +26,22 @@ public class JornadaController extends BaseController {
     }
 
     @GetMapping()
-    public List<ResponseJornadaDto> listarJornadas() {
+    public List<JornadaDto> listarJornadas() {
         return service.listarJornadas();
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<ResponseJornadaDto> buscarJornadaPorId(@PathVariable Integer id) {
+    public ResponseEntity<JornadaDto> buscarJornadaPorId(@PathVariable Integer id) {
         return ok(service.buscarJornadaPorId(id));
     }
     
     @PostMapping()
-    public ResponseEntity<ResponseJornadaDto> criarjornada(@RequestBody RequestNovaJornadaDto novaJornada) {
+    public ResponseEntity<JornadaDto> criarjornada(@RequestBody NovaJornadaDto novaJornada) {
         return created(service.criarJornada(novaJornada));
     }
     
     @PostMapping(path = "/{id}/carta")
-    public ResponseEntity<ResponseJornadaDto> adicionarCartaNaJornada(@PathVariable Integer id, @RequestBody RequestNovaJornadaCartaDto novaJornadaCarta) {
+    public ResponseEntity<JornadaDto> adicionarCartaNaJornada(@PathVariable Integer id, @RequestBody NovaJornadaCartaDto novaJornadaCarta) {
         return created(service.adicionarCartaEmUmaJornada(id, novaJornadaCarta));
     }
     
