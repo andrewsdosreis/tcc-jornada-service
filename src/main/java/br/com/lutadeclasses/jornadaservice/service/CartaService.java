@@ -3,8 +3,7 @@ package br.com.lutadeclasses.jornadaservice.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import br.com.lutadeclasses.jornadaservice.entity.Alternativa;
@@ -12,9 +11,9 @@ import br.com.lutadeclasses.jornadaservice.entity.Carta;
 import br.com.lutadeclasses.jornadaservice.exception.AlternativaNaoEncontradaException;
 import br.com.lutadeclasses.jornadaservice.exception.CartaNaoEncontradaException;
 import br.com.lutadeclasses.jornadaservice.model.CustomMapper;
-import br.com.lutadeclasses.jornadaservice.model.RequestNovaAlternativaDto;
-import br.com.lutadeclasses.jornadaservice.model.RequestNovaCartaDto;
-import br.com.lutadeclasses.jornadaservice.model.ResponseCartaDto;
+import br.com.lutadeclasses.jornadaservice.model.request.NovaAlternativaDto;
+import br.com.lutadeclasses.jornadaservice.model.request.NovaCartaDto;
+import br.com.lutadeclasses.jornadaservice.model.response.CartaDto;
 import br.com.lutadeclasses.jornadaservice.repository.AlternativaRepository;
 import br.com.lutadeclasses.jornadaservice.repository.CartaRepository;
 
@@ -24,44 +23,43 @@ public class CartaService {
     private CartaRepository cartaRepository;
     private AlternativaRepository alternativaRepository;
     private CustomMapper customMapper;
-    private ObjectMapper mapper;
 
-    public CartaService(CartaRepository cartaRepository, AlternativaRepository alternativaRepository, CustomMapper customMapper, ObjectMapper mapper) {
+    public CartaService(CartaRepository cartaRepository, AlternativaRepository alternativaRepository, CustomMapper customMapper) {
         this.cartaRepository = cartaRepository;
         this.alternativaRepository = alternativaRepository;
         this.customMapper = customMapper;
-        this.mapper = mapper;
     }
 
-    public List<ResponseCartaDto> listarCartas() {
+    public List<CartaDto> listarCartas() {
         return cartaRepository.findAll()
                               .stream()
                               .map(carta -> customMapper.converterCartaComAlternativa(carta))
                               .collect(Collectors.toList());
     }
 
-    public ResponseCartaDto buscarCartaPorId(Integer id) {
+    public CartaDto buscarCartaPorId(Integer id) {
         var carta = cartaRepository.findById(id).orElseThrow(() -> new CartaNaoEncontradaException(id));
         return customMapper.converterCartaComAlternativa(carta);
     }
 
-    public ResponseCartaDto criarCarta(RequestNovaCartaDto novaCarta) {
-        var carta = cartaRepository.save(new Carta(obj -> obj.setDescricao(novaCarta.getDescricao())));
-        return mapper.convertValue(carta, ResponseCartaDto.class);
+    public CartaDto criarCarta(NovaCartaDto novaCartaDto) {
+        var carta = montarCarta(novaCartaDto);
+        carta.setAlternativas(CollectionUtils.emptyIfNull(novaCartaDto.getAlternativas())
+                                             .stream()
+                                             .map(novaAlternativa -> montarAlternativa(novaAlternativa, carta))
+                                             .collect(Collectors.toList()));
+
+        return customMapper.converterCartaComAlternativa(cartaRepository.save(carta));
     }
 
     public void deletarCarta(Integer id) {
         var carta = cartaRepository.findById(id).orElseThrow(() -> new CartaNaoEncontradaException(id));
-        alternativaRepository.deleteAll(carta.getAlternativas());
         cartaRepository.delete(carta);
     }
 
-    public ResponseCartaDto adicionarAlternativaNaCarta(Integer id, RequestNovaAlternativaDto novaAlternativa) {
+    public CartaDto adicionarAlternativaNaCarta(Integer id, NovaAlternativaDto novaAlternativaDto) {
         var carta = cartaRepository.findById(id).orElseThrow(() -> new CartaNaoEncontradaException(id));
-        var alternativa = new Alternativa(obj -> {
-            obj.setCarta(carta);
-            obj.setDescricao(novaAlternativa.getDescricao());
-        });
+        var alternativa = montarAlternativa(novaAlternativaDto, carta);
         alternativaRepository.save(alternativa);
         return customMapper.converterCartaComAlternativa(carta);
     }
@@ -70,5 +68,19 @@ public class CartaService {
         var alternativa = alternativaRepository.findById(id).orElseThrow(() -> new AlternativaNaoEncontradaException(id));
         alternativaRepository.delete(alternativa);
     }
-    
+
+    private Carta montarCarta(NovaCartaDto novaCartaDto) {
+        return new Carta(obj -> {
+            obj.setDescricao(novaCartaDto.getDescricao());
+            obj.setAtor(novaCartaDto.getAtor());
+        });
+    }
+
+    private Alternativa montarAlternativa(NovaAlternativaDto novaAlternativaDto, Carta carta) {
+        return new Alternativa(obj -> {
+            obj.setCarta(carta);
+            obj.setDescricao(novaAlternativaDto.getDescricao());
+        });
+    }
+
 }

@@ -12,9 +12,9 @@ import br.com.lutadeclasses.jornadaservice.entity.JornadaCarta;
 import br.com.lutadeclasses.jornadaservice.exception.CartaNaoEncontradaException;
 import br.com.lutadeclasses.jornadaservice.exception.JornadaNaoEncontradaException;
 import br.com.lutadeclasses.jornadaservice.model.CustomMapper;
-import br.com.lutadeclasses.jornadaservice.model.RequestNovaJornadaCartaDto;
-import br.com.lutadeclasses.jornadaservice.model.RequestNovaJornadaDto;
-import br.com.lutadeclasses.jornadaservice.model.ResponseJornadaDto;
+import br.com.lutadeclasses.jornadaservice.model.request.NovaJornadaCartaDto;
+import br.com.lutadeclasses.jornadaservice.model.request.NovaJornadaDto;
+import br.com.lutadeclasses.jornadaservice.model.response.JornadaDto;
 import br.com.lutadeclasses.jornadaservice.repository.CartaRepository;
 import br.com.lutadeclasses.jornadaservice.repository.JornadaCartaRepository;
 import br.com.lutadeclasses.jornadaservice.repository.JornadaRepository;
@@ -37,28 +37,27 @@ public class JornadaService {
         this.customMapper = customMapper;
     }
 
-    public List<ResponseJornadaDto> listarJornadas() {
+    public List<JornadaDto> listarJornadas() {
         return jornadaRepository.findAll()
                                 .stream()
-                                .map(jornada -> objectMapper.convertValue(jornada, ResponseJornadaDto.class))
+                                .map(jornada -> objectMapper.convertValue(jornada, JornadaDto.class))
                                 .collect(Collectors.toList());
     }
 
-    public ResponseJornadaDto buscarJornadaPorId(Integer id) {
+    public JornadaDto buscarJornadaPorId(Integer id) {
         var jornada = jornadaRepository.findById(id).orElseThrow(() -> new JornadaNaoEncontradaException(id));
-        return objectMapper.convertValue(jornada, ResponseJornadaDto.class);
+        return objectMapper.convertValue(jornada, JornadaDto.class);
     }
     
-    public ResponseJornadaDto criarJornada(RequestNovaJornadaDto novaJornada) {
+    public JornadaDto criarJornada(NovaJornadaDto novaJornada) {
         var jornada = jornadaRepository.save(new Jornada(obj -> obj.setTitulo(novaJornada.getTitulo())));
-        return objectMapper.convertValue(jornada, ResponseJornadaDto.class);
+        return objectMapper.convertValue(jornada, JornadaDto.class);
     }
     
-    public ResponseJornadaDto adicionarCartaEmUmaJornada(Integer jornadaId, RequestNovaJornadaCartaDto novaJornadaCarta) {
+    public JornadaDto adicionarCartaEmUmaJornada(Integer jornadaId, NovaJornadaCartaDto novaJornadaCarta) {
         var jornada = jornadaRepository.findById(jornadaId).orElseThrow(() -> new JornadaNaoEncontradaException(jornadaId));
         var carta = cartaRepository.findById(novaJornadaCarta.getCartaId()).orElseThrow(() -> new CartaNaoEncontradaException(novaJornadaCarta.getCartaId()));
         var jornadaCarta = new JornadaCarta(obj -> {
-            obj.setPontoInicial(novaJornadaCarta.getPontoInicial());
             obj.setJornada(jornada);
             obj.setCarta(carta);
         });
