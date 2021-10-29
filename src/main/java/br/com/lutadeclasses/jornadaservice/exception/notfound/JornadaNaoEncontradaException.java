@@ -1,4 +1,4 @@
-package br.com.lutadeclasses.jornadaservice.exception;
+package br.com.lutadeclasses.jornadaservice.exception.notfound;
 
 public class JornadaNaoEncontradaException extends RuntimeException {
     

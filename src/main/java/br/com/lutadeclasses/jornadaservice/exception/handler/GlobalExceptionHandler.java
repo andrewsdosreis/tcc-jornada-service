@@ -18,9 +18,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import br.com.lutadeclasses.jornadaservice.exception.AlternativaNaoEncontradaException;
-import br.com.lutadeclasses.jornadaservice.exception.CartaNaoEncontradaException;
-import br.com.lutadeclasses.jornadaservice.exception.JornadaNaoEncontradaException;
+import br.com.lutadeclasses.jornadaservice.exception.notfound.RegistroNaoEncontradoException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -29,12 +27,12 @@ public class GlobalExceptionHandler {
 
     private Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(CartaNaoEncontradaException.class)
-    public ResponseEntity<ErrorHandler> objectNotFound(CartaNaoEncontradaException e, HttpServletRequest request) {
+    @ExceptionHandler(RegistroNaoEncontradoException.class)
+    public ResponseEntity<ErrorHandler> objectNotFound(RegistroNaoEncontradoException e, HttpServletRequest request) {
         var erro = ErrorHandler.builder()
                                .timestamp(System.currentTimeMillis())
                                .status(HttpStatus.NOT_FOUND.value())
-                               .error("Not Found")
+                               .error("NOT_FOUND")
                                .message(e.getMessage())
                                .path(request.getRequestURI())
                                .method(request.getMethod())
@@ -42,34 +40,6 @@ public class GlobalExceptionHandler {
         logger.error(MGS_ERRO, erro);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
     }
-
-    @ExceptionHandler(AlternativaNaoEncontradaException.class)
-    public ResponseEntity<ErrorHandler> objectNotFound(AlternativaNaoEncontradaException e, HttpServletRequest request) {
-        var erro = ErrorHandler.builder()
-                               .timestamp(System.currentTimeMillis())
-                               .status(HttpStatus.NOT_FOUND.value())
-                               .error("Not Found")
-                               .message(e.getMessage())
-                               .path(request.getRequestURI())
-                               .method(request.getMethod())
-                               .build();
-        logger.error(MGS_ERRO, erro);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
-    }
-
-    @ExceptionHandler(JornadaNaoEncontradaException.class)
-    public ResponseEntity<ErrorHandler> objectNotFound(JornadaNaoEncontradaException e, HttpServletRequest request) {
-        var erro = ErrorHandler.builder()
-                               .timestamp(System.currentTimeMillis())
-                               .status(HttpStatus.NOT_FOUND.value())
-                               .error("Not Found")
-                               .message(e.getMessage())
-                               .path(request.getRequestURI())
-                               .method(request.getMethod())
-                               .build();
-        logger.error(MGS_ERRO, erro);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
-    }    
 
     @ExceptionHandler(JsonProcessingException.class)
     public ResponseEntity<ErrorHandler> jsonProcessingException(JsonProcessingException e, HttpServletRequest request) {
