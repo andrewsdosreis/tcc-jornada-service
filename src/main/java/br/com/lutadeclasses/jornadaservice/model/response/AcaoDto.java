@@ -16,10 +16,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class JornadaCartaDto {
-    private String posicao;
-    private String carta;
-    private String ator;
+public class AcaoDto {
+    private Integer id;
+    private String tipo;
+    private Integer valor;
+    private String barra;
 
     @Override
     public String toString() {

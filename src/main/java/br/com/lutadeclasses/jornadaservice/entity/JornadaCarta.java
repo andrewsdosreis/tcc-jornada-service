@@ -3,6 +3,7 @@ package br.com.lutadeclasses.jornadaservice.entity;
 import java.util.List;
 import java.util.function.Consumer;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -40,7 +41,7 @@ public class JornadaCarta {
     @Column(name = "posicao", nullable = false)
     private String posicao;
 
-    @OneToMany(mappedBy = "jornadaCarta")
+    @OneToMany(mappedBy = "jornadaCarta", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<JornadaAlternativa> jornadasAlternativas;
 

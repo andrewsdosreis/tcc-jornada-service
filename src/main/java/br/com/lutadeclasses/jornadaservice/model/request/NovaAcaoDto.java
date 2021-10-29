@@ -1,7 +1,5 @@
 package br.com.lutadeclasses.jornadaservice.model.request;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -13,7 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class NovaAlternativaDto {
-    private String descricao;
-    private List<NovaAcaoDto> acoes;
+public class NovaAcaoDto {
+    private Integer barraId;
+    private String tipo;
+    private Integer valor;
 }

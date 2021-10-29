@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 import br.com.lutadeclasses.jornadaservice.entity.Jornada;
 import br.com.lutadeclasses.jornadaservice.entity.JornadaCarta;
-import br.com.lutadeclasses.jornadaservice.exception.CartaNaoEncontradaException;
-import br.com.lutadeclasses.jornadaservice.exception.JornadaNaoEncontradaException;
-import br.com.lutadeclasses.jornadaservice.model.CustomMapper;
+import br.com.lutadeclasses.jornadaservice.exception.notfound.CartaNaoEncontradaException;
+import br.com.lutadeclasses.jornadaservice.exception.notfound.JornadaNaoEncontradaException;
+import br.com.lutadeclasses.jornadaservice.model.CustomJornadaMapper;
 import br.com.lutadeclasses.jornadaservice.model.request.NovaJornadaCartaDto;
 import br.com.lutadeclasses.jornadaservice.model.request.NovaJornadaDto;
 import br.com.lutadeclasses.jornadaservice.model.response.JornadaDto;
@@ -26,15 +26,15 @@ public class JornadaService {
     private JornadaCartaRepository jornadaCartaRepository;
     private CartaRepository cartaRepository;
     private ObjectMapper objectMapper;
-    private CustomMapper customMapper;
+    private CustomJornadaMapper customJornadaMapper;
 
     public JornadaService(JornadaRepository jornadaRepository, JornadaCartaRepository jornadaCartaRepository,
-            CartaRepository cartaRepository, ObjectMapper objectMapper, CustomMapper customMapper) {
+            CartaRepository cartaRepository, ObjectMapper objectMapper, CustomJornadaMapper customMapper) {
         this.jornadaRepository = jornadaRepository;
         this.jornadaCartaRepository = jornadaCartaRepository;
         this.cartaRepository = cartaRepository;
         this.objectMapper = objectMapper;
-        this.customMapper = customMapper;
+        this.customJornadaMapper = customMapper;
     }
 
     public List<JornadaDto> listarJornadas() {
@@ -62,7 +62,7 @@ public class JornadaService {
             obj.setCarta(carta);
         });
         jornadaCartaRepository.save(jornadaCarta);
-        return customMapper.converterJornadaComCartas(jornada);
+        return customJornadaMapper.converterJornadaComCartas(jornada);
     }
 
 }
