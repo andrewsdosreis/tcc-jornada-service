@@ -1,7 +1,5 @@
 package br.com.lutadeclasses.jornadaservice.model.response;
 
-import java.util.List;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -18,15 +16,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class JornadaCartaDto {
-    private Integer cartaId;
-    private String ator;
+public class JornadaAlternativaDto {
+    private Integer alternativaId;
     private String descricao;
-    private String posicao;
-    private List<JornadaAlternativaDto> alternativas;
+    private Integer proximaCartaId;
+    private String proximaCartaDescricao;
 
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }    
+    }
 }

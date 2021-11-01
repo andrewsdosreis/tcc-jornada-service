@@ -15,7 +15,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class NovaJornadaCartaDto {
-    @NotNull(message = "O campo 'cartaId' não pode ser nulo")
-    private Integer cartaId;
+public class NovaJornadaAlternativaDto {
+    @NotNull(message = "O campo 'alternativaId' não pode ser nulo")
+    private Integer alternativaId;
+
+    @NotNull(message = "O campo 'proximaCartaId' não pode ser nulo")
+    private Integer proximaCartaId;
 }
