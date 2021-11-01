@@ -15,7 +15,7 @@ import br.com.lutadeclasses.jornadaservice.entity.Carta;
 import br.com.lutadeclasses.jornadaservice.exception.notfound.AcaoNaoEncontradaException;
 import br.com.lutadeclasses.jornadaservice.exception.notfound.BarraNaoEncontradaException;
 import br.com.lutadeclasses.jornadaservice.exception.notfound.CartaNaoEncontradaException;
-import br.com.lutadeclasses.jornadaservice.model.CustomCartaMapper;
+import br.com.lutadeclasses.jornadaservice.mapper.CartaMapper;
 import br.com.lutadeclasses.jornadaservice.model.request.NovaAcaoDto;
 import br.com.lutadeclasses.jornadaservice.model.request.NovaAlternativaDto;
 import br.com.lutadeclasses.jornadaservice.model.request.NovaCartaDto;
@@ -33,31 +33,32 @@ public class CartaService {
     private AlternativaRepository alternativaRepository;
     private AcaoRepository acaoRepository;
     private BarraRepository barraRepository;
-    private CustomCartaMapper customCartaMapper;
+    private CartaMapper cartaMapper;
 
-    public CartaService(CartaRepository cartaRepository, AlternativaRepository alternativaRepository, AcaoRepository acaoRepository, BarraRepository barraRepository, CustomCartaMapper customCartaMapper) {
+    public CartaService(CartaRepository cartaRepository, AlternativaRepository alternativaRepository, AcaoRepository acaoRepository, 
+                        BarraRepository barraRepository, CartaMapper cartaMapper) {
         this.cartaRepository = cartaRepository;
         this.alternativaRepository = alternativaRepository;
         this.acaoRepository = acaoRepository;
         this.barraRepository = barraRepository;
-        this.customCartaMapper = customCartaMapper;
+        this.cartaMapper = cartaMapper;
     }
 
     public List<CartaDto> listarCartas() {
         return cartaRepository.findAll()
                               .stream()
-                              .map(carta -> customCartaMapper.converterCartaComAlternativas(carta))
+                              .map(carta -> cartaMapper.converterCartaComAlternativas(carta))
                               .collect(Collectors.toList());
     }
 
     public CartaDto buscarCartaPorId(Integer id) {
         var carta = cartaRepository.findById(id).orElseThrow(() -> new CartaNaoEncontradaException(id));
-        return customCartaMapper.converterCartaComAlternativas(carta);
+        return cartaMapper.converterCartaComAlternativas(carta);
     }
 
     public CartaDto criarCarta(NovaCartaDto novaCartaDto) {
         var carta = montarCarta(novaCartaDto);
-        return customCartaMapper.converterCartaComAlternativas(cartaRepository.save(carta));
+        return cartaMapper.converterCartaComAlternativas(cartaRepository.save(carta));
     }
 
     public void deletarCarta(Integer id) {
@@ -69,7 +70,7 @@ public class CartaService {
         var carta = cartaRepository.findById(id).orElseThrow(() -> new CartaNaoEncontradaException(id));
         var alternativa = montarAlternativa(novaAlternativaDto, carta);
         alternativaRepository.save(alternativa);
-        return customCartaMapper.converterCartaComAlternativas(carta);
+        return cartaMapper.converterCartaComAlternativas(carta);
     }
 
     public void deletarAlternativaNaCarta(Integer cartaId, Integer alternativaId) {
@@ -84,7 +85,7 @@ public class CartaService {
         List<Acao> acoes = alternativa.getAcoes();
         acoes.add(montarAcao(novaAcaoDto, alternativa));
         alternativaRepository.save(alternativa);
-        return customCartaMapper.converterCartaComAlternativas(alternativa.getCarta());
+        return cartaMapper.converterCartaComAlternativas(alternativa.getCarta());
     }
 
     public void deletarAcaoNaAlternativa(Integer cartaId, Integer alternativaId, Integer acaoId) {
