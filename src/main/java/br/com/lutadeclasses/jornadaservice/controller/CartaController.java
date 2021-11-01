@@ -20,7 +20,7 @@ import br.com.lutadeclasses.jornadaservice.model.response.CartaDto;
 import br.com.lutadeclasses.jornadaservice.service.CartaService;
 
 @RestController
-@RequestMapping(path = "/cartas")
+@RequestMapping(path = "/carta")
 public class CartaController extends BaseController {
     
     private CartaService cartaService;
@@ -50,7 +50,7 @@ public class CartaController extends BaseController {
     }
 
     @PostMapping(path = "/{cartaId}/alternativa")
-    public ResponseEntity<CartaDto> adicionarAlternativaNaCarta(@PathVariable Integer cartaId, @RequestBody NovaAlternativaDto novaAlternativaDto) {
+    public ResponseEntity<CartaDto> adicionarAlternativaNaCarta(@PathVariable Integer cartaId, @RequestBody @Valid NovaAlternativaDto novaAlternativaDto) {
         return created(cartaService.adicionarAlternativaNaCarta(cartaId, novaAlternativaDto));
     }
     
@@ -60,7 +60,7 @@ public class CartaController extends BaseController {
     }
 
     @PostMapping(path = "/{cartaId}/alternativa/{alternativaId}")
-    public ResponseEntity<CartaDto> adicionarAcaoNaAlternativa(@PathVariable Integer cartaId, @PathVariable Integer alternativaId, @RequestBody NovaAcaoDto novaAcaoDto) {
+    public ResponseEntity<CartaDto> adicionarAcaoNaAlternativa(@PathVariable Integer cartaId, @PathVariable Integer alternativaId, @RequestBody @Valid NovaAcaoDto novaAcaoDto) {
         return created(cartaService.adicionarAcaoNaAlternativa(cartaId, alternativaId, novaAcaoDto));
     }
     
