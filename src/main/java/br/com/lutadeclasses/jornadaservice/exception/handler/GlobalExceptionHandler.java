@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import br.com.lutadeclasses.jornadaservice.exception.notfound.RegistroNaoEncontradoException;
+import br.com.lutadeclasses.jornadaservice.exception.validation.ValidacaoException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -40,6 +41,20 @@ public class GlobalExceptionHandler {
         logger.error(MGS_ERRO, erro);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
     }
+
+    @ExceptionHandler(ValidacaoException.class)
+    public ResponseEntity<ErrorHandler> objectNotFound(ValidacaoException e, HttpServletRequest request) {
+        var erro = ErrorHandler.builder()
+                               .timestamp(System.currentTimeMillis())
+                               .status(HttpStatus.BAD_REQUEST.value())
+                               .error("ERRO_DE_VALIDACAO")
+                               .message(e.getMessage())
+                               .path(request.getRequestURI())
+                               .method(request.getMethod())
+                               .build();
+        logger.error(MGS_ERRO, erro);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+    }    
 
     @ExceptionHandler(JsonProcessingException.class)
     public ResponseEntity<ErrorHandler> jsonProcessingException(JsonProcessingException e, HttpServletRequest request) {
@@ -83,7 +98,7 @@ public class GlobalExceptionHandler {
         var erro = ErrorHandler.builder()
                                .timestamp(System.currentTimeMillis())
                                .status(HttpStatus.BAD_REQUEST.value())
-                               .error("Bad Request")
+                               .error("ERRO_DE_VALIDACAO")
                                .message(errors.toString())
                                .path(request.getRequestURI())
                                .method(request.getMethod())
