@@ -10,4 +10,5 @@ import br.com.lutadeclasses.jornadaservice.entity.Alternativa;
 @Repository
 public interface AlternativaRepository extends JpaRepository<Alternativa, Integer> {
     Optional<Alternativa> findByIdAndCarta_Id(Integer id, Integer cartaId);
+    Optional<Alternativa> findByDescricaoAndCarta_Id(String descricao, Integer cartaId);
 }

@@ -59,7 +59,7 @@ public class CartaController extends BaseController {
         cartaService.deletarAlternativaNaCarta(cartaId, alternativaId);
     }
 
-    @PostMapping(path = "/{cartaId}/alternativa/{alternativaId}")
+    @PostMapping(path = "/{cartaId}/alternativa/{alternativaId}/acao")
     public ResponseEntity<CartaDto> adicionarAcaoNaAlternativa(@PathVariable Integer cartaId, @PathVariable Integer alternativaId, @RequestBody @Valid NovaAcaoDto novaAcaoDto) {
         return created(cartaService.adicionarAcaoNaAlternativa(cartaId, alternativaId, novaAcaoDto));
     }

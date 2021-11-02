@@ -15,6 +15,8 @@ import br.com.lutadeclasses.jornadaservice.entity.Carta;
 import br.com.lutadeclasses.jornadaservice.exception.notfound.AcaoNaoEncontradaException;
 import br.com.lutadeclasses.jornadaservice.exception.notfound.BarraNaoEncontradaException;
 import br.com.lutadeclasses.jornadaservice.exception.notfound.CartaNaoEncontradaException;
+import br.com.lutadeclasses.jornadaservice.exception.validation.AlternativaComEstaDescricaoNaCartaJaExisteException;
+import br.com.lutadeclasses.jornadaservice.exception.validation.CartaComEstaDescricaoJaExisteException;
 import br.com.lutadeclasses.jornadaservice.mapper.CartaMapper;
 import br.com.lutadeclasses.jornadaservice.model.request.NovaAcaoDto;
 import br.com.lutadeclasses.jornadaservice.model.request.NovaAlternativaDto;
@@ -96,6 +98,7 @@ public class CartaService {
     }
 
     private Carta montarCarta(NovaCartaDto novaCartaDto) {
+        validarNovaCarta(novaCartaDto);
         var carta = new Carta(obj -> {
             obj.setDescricao(novaCartaDto.getDescricao());
             obj.setAtor(novaCartaDto.getAtor());
@@ -110,6 +113,7 @@ public class CartaService {
     }
 
     private Alternativa montarAlternativa(NovaAlternativaDto novaAlternativaDto, Carta carta) {
+        validarNovaAlternativa(novaAlternativaDto, carta);
         var alternativa = new Alternativa(obj -> { 
             obj.setCarta(carta);
             obj.setDescricao(novaAlternativaDto.getDescricao());
@@ -135,6 +139,20 @@ public class CartaService {
             obj.setTipo(novaAcaoDto.getTipo());
             obj.setValor(novaAcaoDto.getValor());
         });
+    }
+
+    private void validarNovaCarta(NovaCartaDto novaCartaDto) {
+        var carta = cartaRepository.findByDescricao(novaCartaDto.getDescricao());
+        if (carta.isPresent()) {
+            throw new CartaComEstaDescricaoJaExisteException(novaCartaDto.getDescricao());
+        }
+    }
+
+    private void validarNovaAlternativa(NovaAlternativaDto novaAlternativaDto, Carta carta) {
+        var alternativa = alternativaRepository.findByDescricaoAndCarta_Id(novaAlternativaDto.getDescricao(), carta.getId());
+        if (alternativa.isPresent()) {
+            throw new AlternativaComEstaDescricaoNaCartaJaExisteException(novaAlternativaDto.getDescricao(), carta.getId());
+        }
     }
 
     @PostConstruct
