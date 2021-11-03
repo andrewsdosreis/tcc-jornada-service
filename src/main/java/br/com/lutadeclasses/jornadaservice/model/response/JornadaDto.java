@@ -2,6 +2,9 @@ package br.com.lutadeclasses.jornadaservice.model.response;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -18,6 +21,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
+@JsonInclude(Include.NON_NULL)
 public class JornadaDto {
     private Integer id;
     private String titulo;
