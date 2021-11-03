@@ -1,9 +1,7 @@
-package br.com.lutadeclasses.jornadaservice.mapper;
+package br.com.lutadeclasses.jornadaservice.converter;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Component;
 
 import br.com.lutadeclasses.jornadaservice.entity.Acao;
 import br.com.lutadeclasses.jornadaservice.entity.Alternativa;
@@ -12,13 +10,12 @@ import br.com.lutadeclasses.jornadaservice.model.response.AcaoDto;
 import br.com.lutadeclasses.jornadaservice.model.response.AlternativaDto;
 import br.com.lutadeclasses.jornadaservice.model.response.CartaDto;
 
-@Component
-public class CartaMapper {
+public interface CartaConverter {
     
-    public CartaDto converterCartaComAlternativas(Carta carta) {
+    public static CartaDto converterCartaComAlternativas(Carta carta) {
         List<AlternativaDto> alternativas = carta.getAlternativas()
                                                  .stream()
-                                                 .map(this::converterAlternativaComAcoes)
+                                                 .map(CartaConverter::converterAlternativaComAcoes)
                                                  .collect(Collectors.toList());
 
         return CartaDto.builder()
@@ -28,10 +25,10 @@ public class CartaMapper {
                        .build();
     }
 
-    private AlternativaDto converterAlternativaComAcoes(Alternativa alternativa) {
+    private static AlternativaDto converterAlternativaComAcoes(Alternativa alternativa) {
         List<AcaoDto> acoes = alternativa.getAcoes()
                                          .stream()
-                                         .map(this::converterAcao)
+                                         .map(CartaConverter::converterAcao)
                                          .collect(Collectors.toList());
         return AlternativaDto.builder()
                              .id(alternativa.getId())
@@ -40,7 +37,7 @@ public class CartaMapper {
                              .build();
     }
 
-    private AcaoDto converterAcao(Acao acao) {
+    private static AcaoDto converterAcao(Acao acao) {
         return AcaoDto.builder()
                       .id(acao.getId())
                       .tipo(acao.getTipo())
