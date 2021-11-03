@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.lutadeclasses.jornadaservice.converter.CartaConverter;
 import br.com.lutadeclasses.jornadaservice.model.request.NovaAcaoDto;
 import br.com.lutadeclasses.jornadaservice.model.request.NovaAlternativaDto;
 import br.com.lutadeclasses.jornadaservice.model.request.NovaCartaDto;
@@ -20,7 +21,7 @@ import br.com.lutadeclasses.jornadaservice.model.response.CartaDto;
 import br.com.lutadeclasses.jornadaservice.service.CartaService;
 
 @RestController
-@RequestMapping(path = "/carta")
+@RequestMapping(path = "/v1/carta")
 public class CartaController extends BaseController {
     
     private CartaService cartaService;
@@ -36,12 +37,13 @@ public class CartaController extends BaseController {
 
     @GetMapping(path = "/{cartaId}")
     public ResponseEntity<CartaDto> buscarCarta(@PathVariable Integer cartaId) {
-        return ok(cartaService.buscarCartaPorId(cartaId));
+        return ok(CartaConverter.converterCartaComAlternativas(cartaService.buscarCarta(cartaId)));
     }
     
     @PostMapping
     public ResponseEntity<CartaDto> criarCarta(@RequestBody @Valid NovaCartaDto novaCarta) {
-        return created(cartaService.criarCarta(novaCarta));
+        var carta = cartaService.criarCarta(novaCarta);
+        return created(CartaConverter.converterCartaComAlternativas(carta));
     }
 
     @DeleteMapping(path = "/{cartaId}")
@@ -51,7 +53,8 @@ public class CartaController extends BaseController {
 
     @PostMapping(path = "/{cartaId}/alternativa")
     public ResponseEntity<CartaDto> adicionarAlternativaNaCarta(@PathVariable Integer cartaId, @RequestBody @Valid NovaAlternativaDto novaAlternativaDto) {
-        return created(cartaService.adicionarAlternativaNaCarta(cartaId, novaAlternativaDto));
+        var carta = cartaService.adicionarAlternativaNaCarta(cartaId, novaAlternativaDto);
+        return created(CartaConverter.converterCartaComAlternativas(carta));
     }
     
     @DeleteMapping(path = "/{cartaId}/alternativa/{alternativaId}")
@@ -61,7 +64,8 @@ public class CartaController extends BaseController {
 
     @PostMapping(path = "/{cartaId}/alternativa/{alternativaId}/acao")
     public ResponseEntity<CartaDto> adicionarAcaoNaAlternativa(@PathVariable Integer cartaId, @PathVariable Integer alternativaId, @RequestBody @Valid NovaAcaoDto novaAcaoDto) {
-        return created(cartaService.adicionarAcaoNaAlternativa(cartaId, alternativaId, novaAcaoDto));
+        var carta = cartaService.adicionarAcaoNaAlternativa(cartaId, alternativaId, novaAcaoDto);
+        return created(CartaConverter.converterCartaComAlternativas(carta));
     }
     
     @DeleteMapping(path = "/{cartaId}/alternativa/{alternativaId}/acao/{acaoId}")
