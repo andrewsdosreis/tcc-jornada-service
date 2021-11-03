@@ -1,6 +1,6 @@
 package br.com.lutadeclasses.jornadaservice.exception.notfound;
 
-public class JornadaCartaNaoEncontradaException extends RuntimeException {
+public class JornadaCartaNaoEncontradaException extends RegistroNaoEncontradoException {
     
     private static final long serialVersionUID = 1L;
 
