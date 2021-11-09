@@ -93,11 +93,11 @@ public class CartaService {
         acaoRepository.delete(acao);
     }
 
-    public Barra buscarBarra(Integer barraId) {
+    public Barra buscarBarra(String barra) {
         return barras.stream()
-                     .filter(obj -> obj.getId().equals(barraId))
+                     .filter(obj -> obj.getDescricao().equals(barra))
                      .findFirst()
-                     .orElseThrow(() -> new BarraNaoEncontradaException(barraId));
+                     .orElseThrow(() -> new BarraNaoEncontradaException(barra));
     }
 
     private Carta montarCarta(NovaCartaDto novaCartaDto) {
@@ -131,7 +131,7 @@ public class CartaService {
     }
 
     private Acao montarAcao(NovaAcaoDto novaAcaoDto, Alternativa alternativa) {
-        Barra barra = buscarBarra(novaAcaoDto.getBarraId());
+        Barra barra = buscarBarra(novaAcaoDto.getBarra());
         return new Acao(obj -> {
             obj.setAlternativa(alternativa);
             obj.setBarra(barra);

@@ -15,8 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class NovaAcaoDto {
-    @NotNull(message = "O campo 'barraId' não pode ser vazio")
-    private Integer barraId;
+    @NotBlank(message = "O campo 'barra' não pode ser vazio")
+    private String barra;
     
     @NotBlank(message = "O campo 'tipo' não pode ser vazio")
     private String tipo;

@@ -72,7 +72,7 @@ public class JornadaController extends BaseController {
 
     @PostMapping(path = "/{jornadaId}/derrota")
     public ResponseEntity<JornadaCartaDto> adicionarJornadaCartaDerrota(@PathVariable Integer jornadaId, @RequestBody @Valid NovaJornadaCartaDerrotaDto novaJornadaCartaDerrotaDto) {
-        var barra = cartaService.buscarBarra(novaJornadaCartaDerrotaDto.getBarraId());
+        var barra = cartaService.buscarBarra(novaJornadaCartaDerrotaDto.getBarra());
         var carta = cartaService.buscarCarta(novaJornadaCartaDerrotaDto.getCartaId());
         var jornadaCarta = jornadaService.adicionarJornadaCartaDerrota(jornadaId, carta, barra);
         return created(JornadaConverter.converterJornadaCartaComAlternativas(jornadaCarta));
