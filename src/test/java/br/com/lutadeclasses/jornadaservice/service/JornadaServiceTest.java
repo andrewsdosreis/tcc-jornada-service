@@ -179,7 +179,15 @@ public class JornadaServiceTest {
         assertNotNull(exception);
     }
 
+    @Test
+    void test_deletarCartaDaJornada_sucesso() {
+        var jornada = montarJornada();
+        var jornadaCarta = montarJornadaCarta(jornada);
+        when(jornadaCartaRepository.findByJornada_IdAndCarta_Id(any(), any())).thenReturn(Optional.of(jornadaCarta));
 
+        jornadaService.deletarCartaDaJornada(1, 1);
+        verify(jornadaCartaRepository, times(1)).delete(any());
+    }
 
     private NovaJornadaDto montarNovaJornadaDto() {
         return NovaJornadaDto
