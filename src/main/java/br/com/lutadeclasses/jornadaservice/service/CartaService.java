@@ -14,6 +14,7 @@ import br.com.lutadeclasses.jornadaservice.entity.Alternativa;
 import br.com.lutadeclasses.jornadaservice.entity.Barra;
 import br.com.lutadeclasses.jornadaservice.entity.Carta;
 import br.com.lutadeclasses.jornadaservice.exception.notfound.AcaoNaoEncontradaException;
+import br.com.lutadeclasses.jornadaservice.exception.notfound.AlternativaNaoEncontradaException;
 import br.com.lutadeclasses.jornadaservice.exception.notfound.BarraNaoEncontradaException;
 import br.com.lutadeclasses.jornadaservice.exception.notfound.CartaNaoEncontradaException;
 import br.com.lutadeclasses.jornadaservice.exception.validation.AlternativaComEstaDescricaoNaCartaJaExisteException;
@@ -29,7 +30,7 @@ import br.com.lutadeclasses.jornadaservice.repository.CartaRepository;
 
 @Service
 public class CartaService {
-    private List<Barra> barras;
+    protected List<Barra> barras;
     
     private CartaRepository cartaRepository;
     private AlternativaRepository alternativaRepository;
@@ -73,13 +74,13 @@ public class CartaService {
 
     public void deletarAlternativaNaCarta(Integer cartaId, Integer alternativaId) {
         var alternativa = alternativaRepository.findByIdAndCarta_Id(alternativaId, cartaId)
-                                               .orElseThrow(() -> new AcaoNaoEncontradaException(alternativaId));
+                                               .orElseThrow(() -> new AlternativaNaoEncontradaException(alternativaId));
         alternativaRepository.delete(alternativa);
     }
 
     public Carta adicionarAcaoNaAlternativa(Integer cartaId, Integer alternativaId, NovaAcaoDto novaAcaoDto) {
         var alternativa = alternativaRepository.findByIdAndCarta_Id(alternativaId, cartaId)
-                                               .orElseThrow(() -> new AcaoNaoEncontradaException(alternativaId));
+                                               .orElseThrow(() -> new AlternativaNaoEncontradaException(alternativaId));
         List<Acao> acoes = alternativa.getAcoes();
         acoes.add(montarAcao(novaAcaoDto, alternativa));
         alternativaRepository.save(alternativa);
